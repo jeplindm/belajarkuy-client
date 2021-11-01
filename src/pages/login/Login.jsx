@@ -7,15 +7,66 @@ import {
   Typography,
   Link,
   TextField,
+  CircularProgress,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import { Error } from "../../components";
+import axios from "../../config/axios";
 
 const Login = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const history = useHistory();
+
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const { email, password } = form;
+
+    const payload = {
+      UserName: email,
+      Password: password,
+    };
+
+    setLoading(true);
+    try {
+      await axios({
+        url: "/api/auth/login",
+        method: "POST",
+        data: payload,
+      });
+
+      history.push("/dashboard");
+    } catch (e) {
+      setError(true);
+      setMessage("Email / password salah!");
+    } finally {
+      setLoading(false);
+      setForm({
+        email: "",
+        password: "",
+      });
+    }
+  };
   return (
     <>
       <Container disableGutters={true} maxWidth={false}>
         <CssBaseline />
+
+        {error && <Error value={error} message={message} />}
 
         <Grid container sx={{ backgroundColor: "#FFFF" }}>
           <Grid item xs={12} md={6}>
@@ -24,10 +75,10 @@ const Login = () => {
               justifyContent="center"
               alignItems="center"
               p={4}
-              sx={{ height: "100vh", backgroundColor: "#1876D1" }}
+              sx={{ height: "100vh" }}
             >
               <Box p={4} sx={{ backgroundColor: "#FFFF" }} borderRadius={6}>
-                <form>
+                <form onSubmit={handleSubmit}>
                   <Box display="flex" alignItems="center" justifyContent="center" mt={4}>
                     <WbIncandescent
                       fontSize="large"
@@ -46,6 +97,9 @@ const Login = () => {
                       type="email"
                       margin="normal"
                       placeholder="example@gmail.com"
+                      name="email"
+                      value={form.email}
+                      onChange={handleChange}
                     />
 
                     <TextField
@@ -55,20 +109,36 @@ const Login = () => {
                       type="password"
                       margin="normal"
                       placeholder="password"
+                      name="password"
+                      value={form.password}
+                      onChange={handleChange}
                     />
                   </Box>
 
                   <Box m={1}>
-                    <Button
-                      fullWidth
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      size="large"
-                      sx={{ textTransform: "capitalize", marginBottom: "1rem" }}
-                    >
-                      Masuk
-                    </Button>
+                    {loading ? (
+                      <Button
+                        fullWidth
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                        sx={{ textTransform: "capitalize", marginBottom: "1rem" }}
+                      >
+                        <CircularProgress size={20} color="inherit" />
+                      </Button>
+                    ) : (
+                      <Button
+                        fullWidth
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                        sx={{ textTransform: "capitalize", marginBottom: "1rem" }}
+                      >
+                        Masuk
+                      </Button>
+                    )}
                     <Typography variant="body1" align="center">
                       Belum punya akun?{" "}
                       <Link href="/register" color="primary">
@@ -89,7 +159,7 @@ const Login = () => {
               sx={{ height: "100vh" }}
             >
               <img
-                src="/undraw_knowledge.png"
+                src="/undraw_authentication.png"
                 alt="registerImage"
                 style={{ width: "100%" }}
               />

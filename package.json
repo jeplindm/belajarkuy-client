@@ -1,7 +1,7 @@
 {
   "name": "bkuy-client",
   "version": "0.1.0",
-  "private": true,
+  "proxy": "http://35.219.81.197:8082",
   "dependencies": {
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",

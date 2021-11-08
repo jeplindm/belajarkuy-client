@@ -44,11 +44,13 @@ const Register = () => {
     try {
       setLoading(true);
 
-      await axios({
+      const { data } = await axios({
         url: "/api/auth/regis",
         method: "POST",
         data: payload,
       });
+
+      console.log(data, "DATA");
 
       setSuccess(true);
       setMessage("User berhasil dibuat");
@@ -75,18 +77,7 @@ const Register = () => {
         {error && <Error value={error} message={message} />}
 
         <Grid container sx={{ backgroundColor: "#FFFF" }}>
-          <Grid item xs={12} md={6}>
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              sx={{ backgroundColor: "#1876D1", height: "100vh" }}
-            >
-              <img src="/register.png" alt="registerImage" style={{ width: "100%" }} />
-            </Box>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12}>
             <Box
               display="flex"
               justifyContent="center"
@@ -94,7 +85,13 @@ const Register = () => {
               p={4}
               sx={{ height: "100vh" }}
             >
-              <Box sx={{ backgroundColor: "#FFFF" }} p={4} borderRadius={6}>
+              <Box
+                sx={{ backgroundColor: "#FFFF" }}
+                p={4}
+                border={1}
+                borderRadius={6}
+                borderColor="#ECECEC"
+              >
                 <form onSubmit={handleSubmit}>
                   <Typography align="center" variant="h5" component="div">
                     Gabung Sekarang Juga!

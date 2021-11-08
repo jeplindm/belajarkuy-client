@@ -69,7 +69,7 @@ const Login = () => {
         {error && <Error value={error} message={message} />}
 
         <Grid container sx={{ backgroundColor: "#FFFF" }}>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12}>
             <Box
               display="flex"
               justifyContent="center"
@@ -77,7 +77,13 @@ const Login = () => {
               p={4}
               sx={{ height: "100vh" }}
             >
-              <Box p={4} sx={{ backgroundColor: "#FFFF" }} borderRadius={6}>
+              <Box
+                p={4}
+                sx={{ backgroundColor: "#FFFF" }}
+                border={1}
+                borderRadius={6}
+                borderColor="#ECECEC"
+              >
                 <form onSubmit={handleSubmit}>
                   <Box display="flex" alignItems="center" justifyContent="center" mt={4}>
                     <WbIncandescent
@@ -148,21 +154,6 @@ const Login = () => {
                   </Box>
                 </form>
               </Box>
-            </Box>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              sx={{ height: "100vh" }}
-            >
-              <img
-                src="/undraw_authentication.png"
-                alt="registerImage"
-                style={{ width: "100%" }}
-              />
             </Box>
           </Grid>
         </Grid>

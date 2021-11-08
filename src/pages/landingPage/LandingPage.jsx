@@ -61,11 +61,7 @@ const LandingPage = () => {
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <img
-              src="/undraw_studying.png"
-              alt="undraw-studying"
-              style={{ width: "100%" }}
-            />
+            <img src="/register.png" alt="undraw-studying" style={{ width: "100%" }} />
           </Grid>
           <Grid item xs={12} md={6}>
             <Box display="flex" justifyContent="center" alignItems="center" height={500}>

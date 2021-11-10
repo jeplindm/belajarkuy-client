@@ -11,6 +11,8 @@ import {
   UploadCourse,
   UploadAssessment,
   ManageCourse,
+  EnrollCourse,
+  StudentCourses,
 } from "./pages";
 import { makeStyles } from "@mui/styles";
 
@@ -49,6 +51,18 @@ const App = () => {
             exact
             path="/manage/courses"
             render={(props) => <ManageCourse {...props} />}
+          />
+
+          <Route
+            exact
+            path="/enroll/course/:id"
+            render={(props) => <EnrollCourse {...props} />}
+          />
+
+          <Route
+            exact
+            path="/enroll/courses/:id"
+            render={(props) => <StudentCourses {...props} />}
           />
         </div>
 

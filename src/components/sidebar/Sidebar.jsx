@@ -10,7 +10,6 @@ import {
   ExpandMore,
   Logout,
   Menu,
-  Settings,
   WbIncandescent,
 } from "@mui/icons-material";
 import {
@@ -30,6 +29,8 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import { useLocation, withRouter } from "react-router";
+import axios from "../../config/axios";
+import { useDispatch } from "react-redux";
 
 const drawerWidth = 240;
 
@@ -37,11 +38,21 @@ const Sidebar = (props) => {
   const { window, history } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const dispatch = useDispatch();
+
   const [openProfile, setOpenProfile] = useState(false);
 
   const [openCourse, setOpenCourse] = useState(false);
 
   const { pathname } = useLocation();
+
+  const role = localStorage.getItem("role");
+
+  const email = localStorage.getItem("email");
+
+  const userId = localStorage.getItem("id");
+
+  const username = email.substring(0, email.lastIndexOf("@"));
 
   const handleClickProfile = () => {
     setOpenProfile(!openProfile);
@@ -57,6 +68,19 @@ const Sidebar = (props) => {
 
   const handleLogout = (e) => {
     e.preventDefault();
+
+    const email = localStorage.getItem("email");
+
+    axios({
+      method: "POST",
+      url: "/api/auth/logout",
+      data: { UserName: email },
+    })
+      .then(({ data }) => {
+        dispatch({ type: "SET_SUCCESS", payload: true });
+        dispatch({ type: "SET_SUCCESS_MESSAGE", payload: "Logout berhasil" });
+      })
+      .catch((e) => console.log(e, "ERROR"));
 
     localStorage.clear();
 
@@ -89,44 +113,58 @@ const Sidebar = (props) => {
           <ListItemText primary="Home" />
         </ListItem>
 
-        <ListItem
-          button
-          sx={{
-            backgroundColor: pathname === "/analytics" ? "#1876D1" : null,
-            color: pathname === "/analytics" ? "#FFFF" : null,
-          }}
-          onClick={() => history.push("/analytics")}
-        >
-          <ListItemIcon
+        {role === "ADMIN" && (
+          <ListItem
+            button
             sx={{
+              backgroundColor: pathname === "/analytics" ? "#1876D1" : null,
               color: pathname === "/analytics" ? "#FFFF" : null,
             }}
+            onClick={() => history.push("/analytics")}
           >
-            <Analytics />
-          </ListItemIcon>
-          <ListItemText primary="Analytics" />
-        </ListItem>
+            <ListItemIcon
+              sx={{
+                color: pathname === "/analytics" ? "#FFFF" : null,
+              }}
+            >
+              <Analytics />
+            </ListItemIcon>
+            <ListItemText primary="Analytics" />
+          </ListItem>
+        )}
 
-        <ListItem
-          button
-          onClick={handleClickCourse}
-          sx={{
-            backgroundColor:
-              pathname === "/post/course" ||
-              pathname === "/post/assessment" ||
-              pathname === "/manage/courses"
-                ? "#1876D1"
-                : null,
-            color:
-              pathname === "/post/course" ||
-              pathname === "/post/assessment" ||
-              pathname === "/manage/courses"
-                ? "#FFFF"
-                : null,
-          }}
-        >
-          <ListItemIcon
+        {role === "STUDENT" && (
+          <ListItem
+            button
             sx={{
+              backgroundColor:
+                pathname === "/enroll/courses/" + userId ? "#1876D1" : null,
+              color: pathname === "/enroll/courses/" + userId ? "#FFFF" : null,
+            }}
+            onClick={() => history.push("/enroll/courses/" + userId)}
+          >
+            <ListItemIcon
+              sx={{
+                color: pathname === "/enroll/courses/" + userId ? "#FFFF" : null,
+              }}
+            >
+              <Book />
+            </ListItemIcon>
+            <ListItemText primary="Student Courses" />
+          </ListItem>
+        )}
+
+        {role === "ADMIN" && (
+          <ListItem
+            button
+            onClick={handleClickCourse}
+            sx={{
+              backgroundColor:
+                pathname === "/post/course" ||
+                pathname === "/post/assessment" ||
+                pathname === "/manage/courses"
+                  ? "#1876D1"
+                  : null,
               color:
                 pathname === "/post/course" ||
                 pathname === "/post/assessment" ||
@@ -135,11 +173,23 @@ const Sidebar = (props) => {
                   : null,
             }}
           >
-            <BookOnline />
-          </ListItemIcon>
-          <ListItemText primary="Course" />
-          {openCourse ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
+            <ListItemIcon
+              sx={{
+                color:
+                  pathname === "/post/course" ||
+                  pathname === "/post/assessment" ||
+                  pathname === "/manage/courses"
+                    ? "#FFFF"
+                    : null,
+              }}
+            >
+              <BookOnline />
+            </ListItemIcon>
+            <ListItemText primary="Course" />
+            {openCourse ? <ExpandLess /> : <ExpandMore />}
+          </ListItem>
+        )}
+
         <Collapse in={openCourse} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <ListItem
@@ -210,13 +260,6 @@ const Sidebar = (props) => {
         </ListItem>
         <Collapse in={openProfile} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItem button sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <Settings />
-              </ListItemIcon>
-              <ListItemText primary="Settings" />
-            </ListItem>
-
             <ListItem button sx={{ pl: 4 }} onClick={handleLogout}>
               <ListItemIcon>
                 <Logout />
@@ -252,7 +295,7 @@ const Sidebar = (props) => {
             <Menu />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Dashboard
+            Dashboard - {username}
           </Typography>
         </Toolbar>
       </AppBar>

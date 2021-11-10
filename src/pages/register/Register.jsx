@@ -50,10 +50,12 @@ const Register = () => {
         data: payload,
       });
 
-      console.log(data, "DATA");
-
-      setSuccess(true);
-      setMessage("User berhasil dibuat");
+      if (data.Status !== "00") {
+        throw Error();
+      } else {
+        setSuccess(true);
+        setMessage("User berhasil dibuat");
+      }
     } catch (e) {
       setError(true);
       setMessage("User gagal dibuat");

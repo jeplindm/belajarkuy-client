@@ -7,3 +7,5 @@ export { default as Analytics } from "./analytics/Analytics";
 export { default as UploadCourse } from "./course/UploadCourse";
 export { default as UploadAssessment } from "./course/UploadAssesment";
 export { default as ManageCourse } from "./course/ManageCourse";
+export { default as EnrollCourse } from "./enroll/EnrollCourse";
+export { default as StudentCourses } from "./studentCourses/StudentCourses";

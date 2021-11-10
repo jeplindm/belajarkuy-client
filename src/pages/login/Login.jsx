@@ -11,14 +11,15 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { Error } from "../../components";
+import { Error, Success } from "../../components";
 import axios from "../../config/axios";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [message, setMessage] = useState("");
+
+  const dispatch = useDispatch();
 
   const history = useHistory();
 
@@ -33,6 +34,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const { email, password } = form;
 
@@ -41,18 +43,25 @@ const Login = () => {
       Password: password,
     };
 
-    setLoading(true);
     try {
-      await axios({
+      const { data } = await axios({
         url: "/api/auth/login",
         method: "POST",
         data: payload,
       });
 
-      history.push("/dashboard");
+      if (data.Status !== "00") {
+        throw Error();
+      } else {
+        localStorage.setItem("role", data.Role);
+        localStorage.setItem("email", data.Email);
+        localStorage.setItem("id", data.ID);
+
+        history.push("/dashboard");
+      }
     } catch (e) {
-      setError(true);
-      setMessage("Email / password salah!");
+      dispatch({ type: "SET_ERROR", payload: true });
+      dispatch({ type: "SET_ERROR_MESSAGE", payload: "Email / password salah" });
     } finally {
       setLoading(false);
       setForm({
@@ -65,8 +74,8 @@ const Login = () => {
     <>
       <Container disableGutters={true} maxWidth={false}>
         <CssBaseline />
-
-        {error && <Error value={error} message={message} />}
+        <Success />
+        <Error />
 
         <Grid container sx={{ backgroundColor: "#FFFF" }}>
           <Grid item xs={12}>
@@ -106,6 +115,7 @@ const Login = () => {
                       name="email"
                       value={form.email}
                       onChange={handleChange}
+                      required
                     />
 
                     <TextField
@@ -118,6 +128,7 @@ const Login = () => {
                       name="password"
                       value={form.password}
                       onChange={handleChange}
+                      required
                     />
                   </Box>
 
@@ -125,7 +136,6 @@ const Login = () => {
                     {loading ? (
                       <Button
                         fullWidth
-                        type="submit"
                         variant="contained"
                         color="primary"
                         size="large"

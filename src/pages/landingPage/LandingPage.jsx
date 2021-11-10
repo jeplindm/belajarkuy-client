@@ -11,6 +11,7 @@ import {
 import React from "react";
 import { WbIncandescent } from "@mui/icons-material";
 import { useHistory } from "react-router";
+import { Success } from "../../components";
 
 const LandingPage = () => {
   const history = useHistory();
@@ -19,6 +20,7 @@ const LandingPage = () => {
     <>
       <Container disableGutters={true} maxWidth={false}>
         <CssBaseline />
+        <Success />
         <Grid container sx={{ backgroundColor: "#FFFF" }}>
           <Grid item xs={12}>
             <Box sx={{ flexGrow: 1 }}>
@@ -156,6 +158,18 @@ const LandingPage = () => {
               />
               <Typography align="center" variant="h6">
                 Biologi
+              </Typography>
+            </Box>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Box component="footer" p={4} sx={{ backgroundColor: "#1876D1" }}>
+              <Typography
+                variant="body1"
+                align="center"
+                sx={{ color: "#FFFF", fontWeight: 600 }}
+              >
+                ©2021 BelajarYuk. All Rights Reserved
               </Typography>
             </Box>
           </Grid>

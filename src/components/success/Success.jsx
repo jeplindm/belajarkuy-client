@@ -1,23 +1,27 @@
 import { Alert, Snackbar, Stack } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 const Success = ({ value, message }) => {
-  const [open, setOpen] = useState(value);
+  const dispatch = useDispatch();
+
+  const { success, successMessage } = useSelector((state) => state.state);
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
 
-    setOpen(false);
+    dispatch({ type: "SET_SUCCESS", payload: false });
   };
 
   return (
     <>
       <Stack spacing={2} sx={{ width: "100%" }}>
-        <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
+        <Snackbar open={success} autoHideDuration={2000} onClose={handleClose}>
           <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-            {message}
+            {successMessage}
           </Alert>
         </Snackbar>
       </Stack>

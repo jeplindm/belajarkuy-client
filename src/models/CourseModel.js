@@ -6,5 +6,6 @@ export default class Course {
     this.subject = payload.subject;
     this.file = payload.file;
     this.urlVideo = payload.urlVideo;
+    this.status = payload.status;
   }
 }

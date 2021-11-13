@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const ManageCoursePagination = (data, itemsPerPage) => {
+const PagePagination = (data, itemsPerPage) => {
   const [currentPage, setCurrentPage] = useState(1);
   const maxPage = Math.ceil(data.length / itemsPerPage);
 
@@ -26,4 +26,4 @@ const ManageCoursePagination = (data, itemsPerPage) => {
   return { next, prev, jump, currentData, currentPage, maxPage };
 };
 
-export default ManageCoursePagination;
+export default PagePagination;

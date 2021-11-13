@@ -7,7 +7,7 @@ export const getCourses = () => {
     try {
       const { data } = await axios({
         method: "GET",
-        url: "/api/course/getall",
+        url: "/api/course/getall/admin",
       });
 
       if (data.Status !== "00") {
@@ -64,7 +64,12 @@ export const getEnrollCourses = () => {
         url: "/api/course/allenrolled/" + id,
       });
 
-      dispatch({ type: "SET_ENROLL_COURSES", payload: data.Data });
+      let enrollCourses = [];
+
+      const listOfEnrollCourses = data.Data;
+      listOfEnrollCourses.map((item) => enrollCourses.push(new Course(item)));
+
+      dispatch({ type: "SET_ENROLL_COURSES", payload: enrollCourses });
     } catch (error) {
       dispatch({ type: "SET_ERROR", payload: true });
       dispatch({ type: "SET_ERROR_MESSAGE", payload: "Internal server error" });
@@ -90,6 +95,174 @@ export const getCourse = (id) => {
       dispatch({ type: "SET_ERROR_MESSAGE", payload: "Internal server error" });
     } finally {
       dispatch({ type: "SET_LOADING_COURSE", payload: false });
+    }
+  };
+};
+
+export const searchCoursesByTitle = (title) => {
+  return async (dispatch) => {
+    dispatch({ type: "SET_LOADING_COURSES", payload: true });
+    try {
+      const { data } = await axios({
+        method: "GET",
+        url: "/api/course/search?title=" + title,
+      });
+
+      if (data.Status !== "00") {
+        throw Error();
+      } else {
+        const listOfCourses = data.Data;
+
+        let courses = [];
+        listOfCourses.map((item) => courses.push(new Course(item)));
+
+        dispatch({ type: "SET_COURSES", payload: courses });
+      }
+    } catch (error) {
+      console.log(error, "error");
+    } finally {
+      dispatch({ type: "SET_LOADING_COURSES", payload: false });
+    }
+  };
+};
+
+export const createEnrollCourse = ({ data: input }) => {
+  return async (dispatch) => {
+    dispatch({ type: "SET_LOADING_CREATE_ENROLL_COURSE", payload: true });
+    try {
+      const { data } = await axios({
+        method: "POST",
+        url: "/api/course/enroll",
+        data: input,
+      });
+
+      if (data.Status !== "00") {
+        throw Error();
+      } else {
+        dispatch({ type: "SET_SUCCESS", payload: true });
+        dispatch({ type: "SET_SUCCESS_MESSAGE", payload: "Course berhasil terdaftar" });
+        dispatch({ type: "SET_ENROLL_COURSES", payload: data.Data });
+      }
+    } catch (error) {
+      dispatch({ type: "SET_ERROR", payload: true });
+      dispatch({ type: "SET_ERROR_MESSAGE", payload: "Course sudah terdaftar" });
+    } finally {
+      dispatch({ type: "SET_LOADING_CREATE_ENROLL_COURSE", payload: false });
+    }
+  };
+};
+
+export const searchEnrollCourseByTitle = (title) => {
+  return async (dispatch) => {
+    dispatch({ type: "SET_LOADING_ENROLL_COURSES", payload: true });
+
+    const userId = localStorage.getItem("id");
+
+    try {
+      const { data } = await axios({
+        method: "GET",
+        url: `/api/course/searchenrolled/${userId}?title=${title}`,
+      });
+
+      dispatch({ type: "SET_ENROLL_COURSES", payload: data.Data });
+    } catch (error) {
+      dispatch({ type: "SET_ERROR", payload: true });
+      dispatch({ type: "SET_ERROR_MESSAGE", payload: "Internal server error" });
+    } finally {
+      dispatch({ type: "SET_LOADING_ENROLL_COURSES", payload: false });
+    }
+  };
+};
+
+export const removeEnrollCourse = (payload) => {
+  return async (dispatch) => {
+    dispatch({ type: "SET_LOADING_ENROLL_COURSES", payload: true });
+
+    try {
+      const { data } = await axios({
+        method: "POST",
+        url: "/api/course/enroll",
+        data: payload,
+      });
+
+      if (data.Status !== "00") {
+        throw Error();
+      } else {
+        dispatch({ type: "SET_SUCCESS", payload: true });
+        dispatch({
+          type: "SET_SUCCESS_MESSAGE",
+          payload: "Course berhasil dihapus dari list",
+        });
+        dispatch({ type: "SET_UNENROLL_COURSE", payload: payload.idCourse });
+      }
+    } catch (error) {
+      dispatch({ type: "SET_ERROR", payload: true });
+      dispatch({
+        type: "SET_ERROR_MESSAGE",
+        payload: "Gagal menghapus course dari list",
+      });
+    } finally {
+      dispatch({ type: "SET_LOADING_ENROLL_COURSES", payload: false });
+    }
+  };
+};
+
+export const editCourse = (form) => {
+  return async (dispatch) => {
+    dispatch({ type: "SET_LOADING_COURSES", payload: true });
+
+    try {
+      const { data } = await axios({
+        method: "POST",
+        url: "/api/course/update",
+        data: form,
+      });
+
+      if (data.Status !== "00") {
+        throw Error();
+      } else {
+        dispatch({ type: "SET_SUCCESS", payload: true });
+        dispatch({
+          type: "SET_SUCCESS_MESSAGE",
+          payload: "Course berhasil diupdate",
+        });
+        dispatch({ type: "SET_EDIT_COURSE", payload: data.Data });
+      }
+    } catch (error) {
+      dispatch({ type: "SET_ERROR", payload: true });
+      dispatch({ type: "SET_ERROR_MESSAGE", payload: "Update course tidak berhasil" });
+    } finally {
+      dispatch({ type: "SET_LOADING_COURSES", payload: false });
+    }
+  };
+};
+
+export const deleteCourse = (form) => {
+  return async (dispatch) => {
+    dispatch({ type: "SET_LOADING_COURSES", payload: true });
+
+    try {
+      const { data } = await axios({
+        method: "POST",
+        url: "/api/course/update",
+        data: form,
+      });
+
+      if (data.Status !== "00") {
+        throw Error();
+      } else {
+        dispatch({ type: "SET_DELETE_COURSE", payload: data.Data });
+        dispatch({ type: "SET_SUCCESS", payload: true });
+        dispatch({
+          type: "SET_SUCCESS_MESSAGE",
+          payload: "Course berhasil diupdate",
+        });
+      }
+    } catch (error) {
+      dispatch({ type: "SET_ERROR", payload: true });
+      dispatch({ type: "SET_ERROR_MESSAGE", payload: "Update course tidak berhasil" });
+    } finally {
+      dispatch({ type: "SET_LOADING_COURSES", payload: false });
     }
   };
 };

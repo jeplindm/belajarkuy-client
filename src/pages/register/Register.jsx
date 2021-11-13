@@ -13,6 +13,7 @@ import { Box } from "@mui/system";
 import React, { useState } from "react";
 import axios from "../../config/axios";
 import { Success, Error } from "../../components";
+import { useDispatch } from "react-redux";
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -21,10 +22,9 @@ const Register = () => {
     password: "",
   });
 
+  const dispatch = useDispatch();
+
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -53,12 +53,12 @@ const Register = () => {
       if (data.Status !== "00") {
         throw Error();
       } else {
-        setSuccess(true);
-        setMessage("User berhasil dibuat");
+        dispatch({ type: "SET_SUCCESS", payload: true });
+        dispatch({ type: "SET_SUCCESS_MESSAGE", payload: "User berhasil dibuat" });
       }
     } catch (e) {
-      setError(true);
-      setMessage("User gagal dibuat");
+      dispatch({ type: "SET_ERROR", payload: true });
+      dispatch({ type: "SET_ERROR_MESSAGE", payload: "User gagal dibuat" });
     } finally {
       setLoading(false);
       setForm({
@@ -74,9 +74,9 @@ const Register = () => {
       <Container disableGutters={true} maxWidth={false}>
         <CssBaseline />
 
-        {success && <Success value={success} message={message} />}
+        <Success />
 
-        {error && <Error value={error} message={message} />}
+        <Error />
 
         <Grid container sx={{ backgroundColor: "#FFFF" }}>
           <Grid item xs={12}>

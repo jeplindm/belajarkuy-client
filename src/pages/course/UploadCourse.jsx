@@ -93,8 +93,8 @@ const UploadCourse = () => {
                         <em>None</em>
                       </MenuItem>
                       <MenuItem value="Math">Matematika</MenuItem>
-                      <MenuItem value="Fisika">Fisika</MenuItem>
-                      <MenuItem value="Kimia">Kimia</MenuItem>
+                      <MenuItem value="Physics">Fisika</MenuItem>
+                      <MenuItem value="Chemistry">Kimia</MenuItem>
                       <MenuItem value="Biology">Biologi</MenuItem>
                       <MenuItem value="English">English</MenuItem>
                       <MenuItem value="Geography">Geografi</MenuItem>

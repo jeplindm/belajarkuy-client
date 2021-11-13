@@ -246,7 +246,7 @@ const Sidebar = (props) => {
               >
                 <Book />
               </ListItemIcon>
-              <ListItemText primary="Manage Course" />
+              <ListItemText primary="Manage Courses" />
             </ListItem>
           </List>
         </Collapse>

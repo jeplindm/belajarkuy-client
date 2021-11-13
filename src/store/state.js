@@ -10,6 +10,7 @@ const initialState = {
   loadingEnrollCourses: false,
   course: {},
   loadingCourse: false,
+  loadingCreateEnrollCourse: false,
 };
 
 export const stateReducer = (state = initialState, action) => {
@@ -48,6 +49,35 @@ export const stateReducer = (state = initialState, action) => {
 
     case "SET_LOADING_COURSE":
       return { ...state, loadingCourse: payload };
+
+    case "SET_LOADING_CREATE_ENROLL_COURSE":
+      return { ...state, loadingCreateEnrollCourse: payload };
+
+    case "SET_CREATE_ENROLL_CROUSE":
+      const enrollCoursesList = state.enrollCourses;
+      return { ...state, enrollCourses: [payload, ...enrollCoursesList] };
+
+    case "SET_UNENROLL_COURSE":
+      return {
+        ...state,
+        enrollCourses: state.enrollCourses.filter(
+          (course) => course.id.toString() !== payload.toString()
+        ),
+      };
+
+    case "SET_EDIT_COURSE":
+      const data = state.courses;
+      const objIndex = data.findIndex((obj) => obj.id === payload.id);
+      data[objIndex] = payload;
+      return { ...state, courses: [...data] };
+
+    case "SET_DELETE_COURSE":
+      return {
+        ...state,
+        courses: state.courses.filter(
+          (course) => course.id.toString() !== payload.id.toString()
+        ),
+      };
 
     default:
       return state;

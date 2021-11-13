@@ -20,6 +20,8 @@ const drawerWidth = 240;
 const EnrollCourse = () => {
   const history = useHistory();
 
+  const role = localStorage.getItem("role");
+
   const dispatch = useDispatch();
 
   const { id } = useParams();
@@ -46,12 +48,14 @@ const EnrollCourse = () => {
               Go Back
             </Button>
 
-            <Button
-              onClick={() => history.push("/enroll/courses/" + userId)}
-              color="success"
-            >
-              All Courses
-            </Button>
+            {role === "STUDENT" && (
+              <Button
+                onClick={() => history.push("/enroll/courses/" + userId)}
+                color="success"
+              >
+                All Courses
+              </Button>
+            )}
           </Box>
 
           {loadingCourse && (

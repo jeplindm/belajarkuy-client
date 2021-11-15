@@ -14,6 +14,7 @@ import React, { useState } from "react";
 import axios from "../../config/axios";
 import { Success, Error } from "../../components";
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -23,6 +24,8 @@ const Register = () => {
   });
 
   const dispatch = useDispatch();
+
+  const history = useHistory();
 
   const [loading, setLoading] = useState(false);
 
@@ -60,6 +63,8 @@ const Register = () => {
       dispatch({ type: "SET_ERROR", payload: true });
       dispatch({ type: "SET_ERROR_MESSAGE", payload: "User gagal dibuat" });
     } finally {
+      history.push("/login");
+
       setLoading(false);
       setForm({
         email: "",

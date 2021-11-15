@@ -5,7 +5,6 @@ import {
   LandingPage,
   Login,
   Register,
-  NotFoundPage,
   Home,
   Analytics,
   UploadCourse,
@@ -29,8 +28,10 @@ const App = () => {
     <Router>
       <Switch>
         <Route path="/" exact component={LandingPage} />
-        <Route path="/login" component={Login} />
+
         <Route path="/register" component={Register} />
+
+        <Route path="/login" component={Login} />
 
         <div className={classes.container}>
           <Sidebar />
@@ -68,8 +69,6 @@ const App = () => {
             render={(props) => <StudentCourses {...props} />}
           />
         </div>
-
-        <Route path="*" component={NotFoundPage} />
       </Switch>
     </Router>
   );

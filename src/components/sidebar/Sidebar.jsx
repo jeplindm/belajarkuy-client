@@ -10,6 +10,7 @@ import {
   ExpandMore,
   Logout,
   Menu,
+  Person,
   WbIncandescent,
 } from "@mui/icons-material";
 import {
@@ -250,6 +251,24 @@ const Sidebar = (props) => {
             </ListItem>
           </List>
         </Collapse>
+
+        <ListItem
+          sx={{
+            backgroundColor: pathname === "/users" ? "#1876D1" : null,
+            color: pathname === "/users" ? "#FFFF" : null,
+          }}
+          button
+          onClick={() => history.push("/users")}
+        >
+          <ListItemIcon
+            sx={{
+              color: pathname === "/users" ? "#FFFF" : null,
+            }}
+          >
+            <Person />
+          </ListItemIcon>
+          <ListItemText primary="User" />
+        </ListItem>
 
         <ListItem button onClick={handleClickProfile}>
           <ListItemIcon>

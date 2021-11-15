@@ -1,5 +1,6 @@
 import axios from "../config/axios";
 import Course from "../models/CourseModel";
+import User from "../models/UserModel";
 
 export const getCourses = () => {
   return async (dispatch) => {
@@ -263,6 +264,89 @@ export const deleteCourse = (form) => {
       dispatch({ type: "SET_ERROR_MESSAGE", payload: "Update course tidak berhasil" });
     } finally {
       dispatch({ type: "SET_LOADING_COURSES", payload: false });
+    }
+  };
+};
+
+export const getUsers = () => {
+  return async (dispatch) => {
+    dispatch({ type: "SET_LOADING_USERS", payload: true });
+
+    try {
+      const { data } = await axios({
+        method: "GET",
+        url: "/api/user/getall",
+      });
+
+      if (data.Status !== "00") {
+        throw Error();
+      } else {
+        const listOfUsers = data.Data;
+        let users = [];
+
+        listOfUsers.map((item) => users.push(new User(item)));
+        dispatch({ type: "SET_USERS", payload: users });
+      }
+    } catch (error) {
+      dispatch({ type: "SET_ERROR", payload: true });
+      dispatch({ type: "SET_ERROR_MESSAGE", payload: "Internal server error" });
+    } finally {
+      dispatch({ type: "SET_LOADING_USERS", payload: false });
+    }
+  };
+};
+
+export const deleteUser = (id) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: "SET_LOADING_USERS", payload: true });
+
+      const { data } = await axios({
+        method: "DELETE",
+        url: "/api/user/delete/" + id,
+      });
+
+      if (data.Status !== "00") {
+        throw Error();
+      } else {
+        dispatch({ type: "SET_DELETE_USER", payload: id });
+        dispatch({ type: "SET_SUCCESS", payload: true });
+        dispatch({ type: "SET_SUCCESS_MESSAGE", payload: "User berhasil terhapus" });
+      }
+    } catch (error) {
+      dispatch({ type: "SET_ERROR", payload: true });
+      dispatch({ type: "SET_ERROR_MESSAGE", payload: "User gagal terhapus" });
+    } finally {
+      dispatch({ type: "SET_LOADING_USERS", payload: false });
+    }
+  };
+};
+
+export const editUser = (payload) => {
+  return async (dispatch) => {
+    dispatch({ type: "SET_LOADING_USERS", payload: true });
+    try {
+      const { data } = await axios({
+        method: "POST",
+        url: "/api/user/update",
+        data: payload,
+      });
+
+      if (data.Status !== "00") {
+        throw Error();
+      } else {
+        dispatch({
+          type: "SET_EDIT_USER",
+          payload: { phone: data.NoHP, id: payload.UserId },
+        });
+        dispatch({ type: "SET_SUCCESS", payload: true });
+        dispatch({ type: "SET_SUCCESS_MESSAGE", payload: "User berhasil terhapus" });
+      }
+    } catch (error) {
+      dispatch({ type: "SET_ERROR", payload: true });
+      dispatch({ type: "SET_ERROR_MESSAGE", payload: "User gagal terupdate" });
+    } finally {
+      dispatch({ type: "SET_LOADING_USERS", payload: false });
     }
   };
 };

@@ -5,3 +5,5 @@ export { default as PagePagination } from "./pagination/Pagination";
 export { default as EditCourse } from "./edit/EditCourse";
 export { default as HomeAdmin } from "./home/HomeAdmin";
 export { default as HomeStudent } from "./home/HomeStudent";
+export { default as DeleteUser } from "./user/DeleteUser";
+export { default as EditUser } from "./user/EditUser";

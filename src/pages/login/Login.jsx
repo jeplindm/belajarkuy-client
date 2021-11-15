@@ -57,7 +57,9 @@ const Login = () => {
         localStorage.setItem("email", data.Email);
         localStorage.setItem("id", data.ID);
 
-        history.push("/dashboard");
+        if (data.Role !== "SPV") {
+          history.push("/dashboard");
+        } else history.push("/analytics");
       }
     } catch (e) {
       dispatch({ type: "SET_ERROR", payload: true });

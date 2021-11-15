@@ -96,25 +96,27 @@ const Sidebar = (props) => {
       </Box>
       <Divider />
       <List>
-        <ListItem
-          button
-          sx={{
-            backgroundColor: pathname === "/dashboard" ? "#1876D1" : null,
-            color: pathname === "/dashboard" ? "#FFFF" : null,
-          }}
-          onClick={() => history.push("/dashboard")}
-        >
-          <ListItemIcon
+        {role !== "SPV" && (
+          <ListItem
+            button
             sx={{
+              backgroundColor: pathname === "/dashboard" ? "#1876D1" : null,
               color: pathname === "/dashboard" ? "#FFFF" : null,
             }}
+            onClick={() => history.push("/dashboard")}
           >
-            <Apps />
-          </ListItemIcon>
-          <ListItemText primary="Home" />
-        </ListItem>
+            <ListItemIcon
+              sx={{
+                color: pathname === "/dashboard" ? "#FFFF" : null,
+              }}
+            >
+              <Apps />
+            </ListItemIcon>
+            <ListItemText primary="Home" />
+          </ListItem>
+        )}
 
-        {role === "ADMIN" && (
+        {(role === "ADMIN" || role === "SPV") && (
           <ListItem
             button
             sx={{
@@ -252,23 +254,25 @@ const Sidebar = (props) => {
           </List>
         </Collapse>
 
-        <ListItem
-          sx={{
-            backgroundColor: pathname === "/users" ? "#1876D1" : null,
-            color: pathname === "/users" ? "#FFFF" : null,
-          }}
-          button
-          onClick={() => history.push("/users")}
-        >
-          <ListItemIcon
+        {role === "ADMIN" && (
+          <ListItem
             sx={{
+              backgroundColor: pathname === "/users" ? "#1876D1" : null,
               color: pathname === "/users" ? "#FFFF" : null,
             }}
+            button
+            onClick={() => history.push("/users")}
           >
-            <Person />
-          </ListItemIcon>
-          <ListItemText primary="User" />
-        </ListItem>
+            <ListItemIcon
+              sx={{
+                color: pathname === "/users" ? "#FFFF" : null,
+              }}
+            >
+              <Person />
+            </ListItemIcon>
+            <ListItemText primary="User" />
+          </ListItem>
+        )}
 
         <ListItem button onClick={handleClickProfile}>
           <ListItemIcon>

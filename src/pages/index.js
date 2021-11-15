@@ -9,3 +9,4 @@ export { default as UploadAssessment } from "./course/UploadAssesment";
 export { default as ManageCourse } from "./course/ManageCourse";
 export { default as EnrollCourse } from "./enroll/EnrollCourse";
 export { default as StudentCourses } from "./studentCourses/StudentCourses";
+export { default as User } from "./user/User";

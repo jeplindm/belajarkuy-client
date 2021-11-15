@@ -11,6 +11,8 @@ const initialState = {
   course: {},
   loadingCourse: false,
   loadingCreateEnrollCourse: false,
+  users: [],
+  loadingUsers: false,
 };
 
 export const stateReducer = (state = initialState, action) => {
@@ -78,6 +80,24 @@ export const stateReducer = (state = initialState, action) => {
           (course) => course.id.toString() !== payload.id.toString()
         ),
       };
+
+    case "SET_USERS":
+      return { ...state, users: payload };
+
+    case "SET_LOADING_USERS":
+      return { ...state, loadingUsers: payload };
+
+    case "SET_DELETE_USER":
+      return {
+        ...state,
+        users: state.users.filter((user) => user.id.toString() !== payload.toString()),
+      };
+
+    case "SET_EDIT_USER":
+      const users = state.users;
+      const objectIndex = users.findIndex((obj) => obj.id === payload.id);
+      users[objectIndex].phone = payload.phone;
+      return { ...state, users: [...users] };
 
     default:
       return state;

@@ -13,6 +13,7 @@ import {
   ManageCourse,
   EnrollCourse,
   StudentCourses,
+  User,
 } from "./pages";
 import { makeStyles } from "@mui/styles";
 
@@ -35,6 +36,8 @@ const App = () => {
           <Sidebar />
           <Route exact path="/dashboard" render={(props) => <Home {...props} />} />
           <Route exact path="/analytics" render={(props) => <Analytics {...props} />} />
+          <Route exact path="/users" render={(props) => <User {...props} />} />
+
           <Route
             exact
             path="/post/course"
